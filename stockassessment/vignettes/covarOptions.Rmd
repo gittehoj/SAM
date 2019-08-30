@@ -1,0 +1,70 @@
+---
+title: "Observation variance options in SAM"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Observation variance options in SAM}
+  %\VignetteEngine{knitr::rmarkdown}
+  \usepackage[utf8]{inputenc}
+---
+
+In SAM there is a configuration setting `keyVarObs` which couples the observation variances [(Nielsen et al., 2014)](https://doi.org/10.1016/j.fishres.2014.01.014). In addition, the user can provide external variance estimates or assume a mean-variance link. Here we go trough these additional options:
+
+1. Provide external observation variance estimates.
+1. Provide external observation correlation matrices.
+1. Provide external observation covariance matrices.
+1. Assume a mean-variance link.
+
+Note that there are options available for estimating the observation correlation structure in SAM by choosing the desiered `obsCorStruct` configuration. The additional options for estimating observation variances elaborated in this document can be used combinded with the selected correlation structure.
+
+
+## 1) Provide external variance estimates
+
+External observation variance estimates can be included in SAM. This is achived by assigning a `weight` attribute to the corresponding survey or catch data before it is passed to `setup.sam.data()`. The `weight` attribute must have the same dimensions as the correspoonding observation matrix, and provide the precision of each estimate.
+
+An example with use of external variance estimates is provided in https://github.com/fishfollower/SAM/blob/master/testmore/herringVar/script.R. The important lines in this example are when we assign the `weight` attributes equal the precision:
+```r
+  attributes(cn)$weight = 1/varC
+  attributes(surveys[[1]])$weight = 1/varS1
+  attributes(surveys[[2]])$weight = 1/varS2
+  attributes(surveys[[3]])$weight = 1/varS3
+```
+
+
+The provided external variance estimates are by default used in SAM as relative weights, i.e. scaled with the internal estimated correspondning observation variance coupled with the `keyVarObs` configuration. We can use the provided variance estimates as fixed variances by setting the `fixVarToWeight` configuration equal to 1.  
+
+*Warning:* If variance estimates are provided for a given fleet and `fixVarToWeight` is set to 0, variance estimates must be included for all the observations from that fleet.  
+
+## 2) Provide external correlation matrices
+
+External correlation matrices can be provided by assigning a list containing the correlation matrices as an attribute to the corresponding data. The attribute must be named `cor`. An example with use of external correlation matrices is provided in https://github.com/fishfollower/SAM/blob/master/testmore/nscodcovar/script.R. The important line in this example is when we assign `cor` equal the list of externally estimated correlation matrices:
+```r
+  attr(surveys[[2]], "cor") <- lapply(1:23, function(i)estcor)
+```
+
+
+## 3) Provide external covariance matrices
+
+External covariance matrices can be provided by assigning a list with the covariance matrices as an attribute named `cov-weight` to the given data. For an example, see https://github.com/fishfollower/SAM/blob/master/testmore/nscodcovar/script.R. The important line in this example is when we assign the `cov-weight` attribute equal the list with the externally estimated  covariance matrices:
+```r
+  attr(surveys[[2]], "cov-weight") <- lapply(1:23, function(i)estcov)
+```
+Note that the estimated variances will be scaled internally in SAM when we provide the `cov-weight` attribute, and the correlation structure will be used as fixed. If we want to use the externally estiamted variances as fixed, we rename the attribut to `cov`, i.e:
+```r
+  attr(surveys[[2]], "cov") <- lapply(1:23, function(i)estcov)
+```
+
+*TODO: I find the two configurations `cov-weight` and `cov` a bit confusing. I think we should remove the cov-weight option, and only include the cov-option and use the scaling procedure as defualt. And the user can set `fixVarToWeight` =1. I find the code a bit difficult to read when we have these options which should give the same result. If we want to use the variances as fixes for only some of the fleets, we should include the `fixVarToWeight` configuration as a vector with one element for each fleet?*
+
+## 4) Assume mean-varaince link
+This option accomondates for that there may be a log-link between the observation variance and the expected observation on natural scale. An intuitive reasoning for this is that the relative uncertainty is typically decreasing with the expected observation size. E.g. if we predict 1 fish, we are typically more likely to miss the observation with a given factor compared to if we predict a million fish. 
+
+\vspace{2mm}
+Let $\mu_{a,y}$ be the expected observation for age $a$ at year $y$ on natural scale, and let $v_{a,y}$ be the correspondning variance. In this option we impose the assumption that
+\begin{align}
+\log v_{a,y} = \alpha + \beta \log(\mu_{a,y}),  \nonumber
+\end{align}
+and estimate $\alpha$ and $\beta$ internally in SAM.
+
+This option is selcted by providing the configuration `meanWeigthObsV` which couples the $\beta$ parameters. SAM will further use the settings provided in `keyVarObs` to couple the $\alpha$ parameters. See https://github.com/fishfollower/SAM/tree/meanWeightObsVariance/testmore/sizeWeightingObsVar for an example.
+
+
