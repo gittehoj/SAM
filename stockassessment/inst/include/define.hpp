@@ -146,6 +146,7 @@ struct confSet{
   double fracMixF;
   double fracMixN;
   vector<double> fracMixObs;
+  int stockWeightProcess;
   confSet() {};
 
   confSet(SEXP x){
@@ -176,6 +177,7 @@ struct confSet{
     fracMixF = (double)*REAL(getListElement(x,"fracMixF"));
     fracMixN = (double)*REAL(getListElement(x,"fracMixN"));
     fracMixObs = asVector<double>(getListElement(x,"fracMixObs"));
+    stockWeightProcess = (int)*REAL(getListElement(x,"stockWeightProcess"));
   };
 
   confSet& operator=(const confSet& rhs) {
@@ -205,6 +207,7 @@ struct confSet{
     fracMixF = rhs.fracMixF;
     fracMixN = rhs.fracMixN;
     fracMixObs = rhs.fracMixObs;
+    stockWeightProcess = rhs.stockRecruitmentModelCode;
     return *this;
   };
 };
