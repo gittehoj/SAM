@@ -47,6 +47,6 @@ defpar <- function(dat,conf){
   }
   ret$logF=matrix(0, nrow=max(conf$keyLogFsta)+1,ncol=dat$noYears)
   ret$logN=matrix(0, nrow=conf$maxAge-conf$minAge+1, ncol=dat$noYears)
-  
+  ret$logSW=t(log(ifelse(dat$stockMeanWeight>1.0e-9, dat$stockMeanWeight, 1.0e-9)))   
   return(ret)
 }
