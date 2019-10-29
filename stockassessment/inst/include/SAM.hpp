@@ -1,6 +1,7 @@
 #include "define.hpp"
 #include "derived.hpp"
 #include "f.hpp"
+#include "sw.hpp"
 #include "predn.hpp"
 #include "n.hpp"
 #include "predobs.hpp"
