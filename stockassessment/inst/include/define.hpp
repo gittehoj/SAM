@@ -230,7 +230,9 @@ struct paraSet{
   vector<Type> logitRecapturePhi;   
   vector<Type> sepFalpha;   
   vector<Type> sepFlogitRho;   
-  vector<Type> sepFlogSd;   
+  vector<Type> sepFlogSd;
+  vector<Type> logSdLogSW;
+  vector<Type> logSdLogSWObs;
 };
 
 template<class Type>

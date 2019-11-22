@@ -116,6 +116,8 @@ Type objective_function<Type>::operator() ()
   
   PARAMETER_ARRAY(logF); 
   PARAMETER_ARRAY(logN);
+  PARAMETER_VECTOR(logSdLogSW); paraset.logSdLogSW = logSdLogSW;
+  PARAMETER_VECTOR(logSdLogSWObs); paraset.logSdLogSWObs = logSdLogSWObs;
   PARAMETER_ARRAY(logSW);  
   PARAMETER_VECTOR(missing);
 

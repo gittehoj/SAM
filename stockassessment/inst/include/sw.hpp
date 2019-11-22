@@ -3,7 +3,7 @@ Type nllSW(dataSet<Type> &dat, confSet &conf, paraSet<Type> &par, array<Type> &l
   Type nll=0; 
   int stateDimSW=logSW.dim[0];
   int timeSteps=logSW.dim[1];
-  Type sdLogSW=exp(Type(0.001));
+  Type sdLogSW=exp(par.logSdLogSW(0));
   matrix<Type> swvar(stateDimSW,stateDimSW);
   matrix<Type> swcor(stateDimSW,stateDimSW);
   vector<Type> swsd(stateDimSW);  
@@ -42,7 +42,7 @@ Type nllSWobs(dataSet<Type> &dat, confSet &conf, paraSet<Type> &par, array<Type>
   array<Type> SW=dat.stockMeanWeight;
   for(int a=0; a<SW.dim[1]; ++a){
     for(int y=0; y<SW.dim[0]; ++y){
-      nll += -dnorm(log(SW(y,a)),logSW(a,y),Type(0.5),true);
+      nll += -dnorm(log(SW(y,a)),logSW(a,y),exp(par.logSdLogSWObs(0)),true);
     }
   }
   return nll;
