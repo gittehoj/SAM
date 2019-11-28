@@ -1,5 +1,5 @@
 template <class Type>
-Type nllSW(dataSet<Type> &dat, confSet &conf, paraSet<Type> &par, array<Type> &logSW, data_indicator<vector<Type>,Type> &keep, objective_function<Type> *of){
+Type nllSW(dataSet<Type> &dat, confSet &conf, paraSet<Type> &par, array<Type> &logSW, vector<Type> &logCSW, data_indicator<vector<Type>,Type> &keep, objective_function<Type> *of){
   Type nll=0; 
   int stateDimSW=logSW.dim[0];
   int timeSteps=logSW.dim[1];
@@ -32,17 +32,29 @@ Type nllSW(dataSet<Type> &dat, confSet &conf, paraSet<Type> &par, array<Type> &l
   for(int i=1;i<timeSteps;i++){
     nll+=neg_log_densitySW(logSW.col(i)-logSW.col(i-1)); // F-Process likelihood
   }
+  
+  if(conf.stockWeightProcess==2){
+    for(int i= 0; i<logCSW.size(); ++i){
+      nll += -dnorm(logCSW(i), Type(0), exp(par.logSdLogCSW(0)), true);
+    }
+  }
 
   return nll;
 }
 
 template <class Type>
-Type nllSWobs(dataSet<Type> &dat, confSet &conf, paraSet<Type> &par, array<Type> &logSW, data_indicator<vector<Type>,Type> &keep, objective_function<Type> *of){
-  Type nll=0;
+Type nllSWobs(dataSet<Type> &dat, confSet &conf, paraSet<Type> &par, array<Type> &logSW, vector<Type> &logCSW, data_indicator<vector<Type>,Type> &keep, objective_function<Type> *of){
+  Type nll=0; 
+  Type pred;
   array<Type> SW=dat.stockMeanWeight;
   for(int a=0; a<SW.dim[1]; ++a){
     for(int y=0; y<SW.dim[0]; ++y){
-      nll += -dnorm(log(SW(y,a)),logSW(a,y),exp(par.logSdLogSWObs(0)),true);
+      if(y<a){
+        pred=logSW(a,y);
+      }else{
+        pred=logSW(a,y)+logCSW(y-a);
+      }
+      nll += -dnorm(log(SW(y,a)), pred, exp(par.logSdLogSWObs(0)), true);
     }
   }
   return nll;

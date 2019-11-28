@@ -47,12 +47,28 @@ defpar <- function(dat,conf){
   }
   ret$logF=matrix(0, nrow=max(conf$keyLogFsta)+1,ncol=dat$noYears)
   ret$logN=matrix(0, nrow=conf$maxAge-conf$minAge+1, ncol=dat$noYears)
-  if(conf$stockWeightProcess > 0.5){
-    ret$logSdLogSW = 0
-    ret$logSdLogSWObs = 0
-    ret$logSW=t(log(ifelse(dat$stockMeanWeight>1.0e-9, dat$stockMeanWeight, 1.0e-9))) 
-  }else{
+  if(conf$stockWeightProcess == 0){
     ret$logSW=matrix(nrow=0, ncol=0)
+    ret$logSdLogSW = numeric(0)
+    ret$logSdLogCSW = numeric(0)
+    ret$logSdLogSWObs = numeric(0)
+    ret$logCSW=numeric(0)
+  }else{
+    if(conf$stockWeightProcess == 1){
+      ret$logSdLogSW = 0
+      ret$logSdLogCSW = numeric(0)
+      ret$logSdLogSWObs = 0
+      ret$logSW=t(log(ifelse(dat$stockMeanWeight>1.0e-9, dat$stockMeanWeight, 1.0e-9)))
+      ret$logCSW=numeric(0)
+    }else{
+      if(conf$stockWeightProcess == 2){
+        ret$logSdLogSW = 0
+        ret$logSdLogCSW = 0
+        ret$logSdLogSWObs = 0
+        ret$logSW=t(log(ifelse(dat$stockMeanWeight>1.0e-9, dat$stockMeanWeight, 1.0e-9)))
+        ret$logCSW=numeric(dat$noYears)
+      }
+    }
   }
   return(ret)
 }

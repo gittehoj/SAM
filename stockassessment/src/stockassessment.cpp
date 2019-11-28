@@ -117,8 +117,10 @@ Type objective_function<Type>::operator() ()
   PARAMETER_ARRAY(logF); 
   PARAMETER_ARRAY(logN);
   PARAMETER_VECTOR(logSdLogSW); paraset.logSdLogSW = logSdLogSW;
+  PARAMETER_VECTOR(logSdLogCSW); paraset.logSdLogCSW = logSdLogCSW;
   PARAMETER_VECTOR(logSdLogSWObs); paraset.logSdLogSWObs = logSdLogSWObs;
-  PARAMETER_ARRAY(logSW);  
+  PARAMETER_ARRAY(logSW); 
+  PARAMETER_VECTOR(logCSW);
   PARAMETER_VECTOR(missing);
 
   // patch missing 
@@ -138,9 +140,9 @@ Type objective_function<Type>::operator() ()
 
   ans += nllF(confset, paraset, logF, keep, this);
   ans += nllN(dataset, confset, paraset, logN, logF, keep, this);
-  if(stockWeightProcess==1){
-    ans += nllSW(dataset, confset, paraset, logSW, keep, this);
-    ans += nllSWobs(dataset, confset, paraset, logSW, keep, this);  
+  if(stockWeightProcess!=0){
+    ans += nllSW(dataset, confset, paraset, logSW, logCSW, keep, this);
+    ans += nllSWobs(dataset, confset, paraset, logSW, logCSW, keep, this);  
   }
   ans += nllObs(dataset, confset, paraset, logN, logF, keep,  this);  
   return ans;

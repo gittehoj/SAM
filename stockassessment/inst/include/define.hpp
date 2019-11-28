@@ -232,6 +232,7 @@ struct paraSet{
   vector<Type> sepFlogitRho;   
   vector<Type> sepFlogSd;
   vector<Type> logSdLogSW;
+  vector<Type> logSdLogCSW;
   vector<Type> logSdLogSWObs;
 };
 
@@ -256,7 +257,7 @@ VECTORIZE2_tt(logdrobust)
 template <class Type>
 class MVMIX_t{
   Type halfLogDetS;         
-  Type p1;                  /*fraction t3*/
+  Type p1;                  /* fraction t3 */
   matrix<Type> Sigma;       
   vector<Type> sd;
   matrix<Type> L_Sigma;

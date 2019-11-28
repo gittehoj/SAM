@@ -179,7 +179,7 @@ saveConf <- function(x, file="", overwrite=FALSE){
     txt$fracMixN <- "The fraction of t(3) distribution used in logN increment distribution"
     txt$fracMixObs <- "A vector with same length as number of fleets, where each element is the fraction of t(3) distribution used in the distribution of that fleet"
     txt$constRecBreaks <- "Vector of break years between which recruitment is at constant level. The break year is included in the left interval. (This option is only used in combination with stock-recruitment code 3)"
-    txt$stockWeightProcess <- "Define the way stock weights are treated. 0: as externaly given covariates. 1: as random process"
+    txt$stockWeightProcess <- "Define the way stock weights are treated. 0: as externaly given covariates. 1: as random walk. 2: Random walk and cohorte effect"
     nam<-names(x)
     dummy<-lapply(1:length(nam), function(i){
         cat('\n$', file=file, append=TRUE)
