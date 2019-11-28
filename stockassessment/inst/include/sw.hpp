@@ -52,7 +52,10 @@ Type nllSWobs(dataSet<Type> &dat, confSet &conf, paraSet<Type> &par, array<Type>
       if(y<a){
         pred=logSW(a,y);
       }else{
-        pred=logSW(a,y)+logCSW(y-a);
+        pred=logSW(a,y);
+	if(conf.stockWeightProcess==2){
+	  pred += logCSW(y-a);
+	}
       }
       nll += -dnorm(log(SW(y,a)), pred, exp(par.logSdLogSWObs(0)), true);
     }
