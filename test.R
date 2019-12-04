@@ -1,13 +1,15 @@
 library(stockassessment)
+example(sam.fit)
+
 conf<-nscodConf
 conf$stockWeightProcess <- 2
 par <- defpar(nscodData, conf)
-fit <- sam.fit(nscodData, conf, par)
+fit2 <- sam.fit(nscodData, conf, par)
 
-logSW<-fit$pl$logSW
+logSW<-fit2$pl$logSW
 for(i in 1:ncol(logSW)){
   for(j in 1:nrow(logSW)){
-    if(i>=j)logSW[j,i]<-logSW[j,i]+fit$pl$logCSW[i-j+1]
+    if(i>=j)logSW[j,i]<-logSW[j,i]+fit2$pl$logCSW[i-j+1]
   }
 }
 
