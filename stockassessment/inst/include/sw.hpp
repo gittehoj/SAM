@@ -45,19 +45,20 @@ Type nllSW(dataSet<Type> &dat, confSet &conf, paraSet<Type> &par, array<Type> &l
 template <class Type>
 Type nllSWobs(dataSet<Type> &dat, confSet &conf, paraSet<Type> &par, array<Type> &logSW, vector<Type> &logCSW, data_indicator<vector<Type>,Type> &keep, objective_function<Type> *of){
   Type nll=0; 
-  Type pred;
+  dat.predSW.setZero();
   array<Type> SW=dat.stockMeanWeight;
   for(int a=0; a<SW.dim[1]; ++a){
     for(int y=0; y<SW.dim[0]; ++y){
       if(y<a){
-        pred=logSW(a,y);
+        dat.predSW(y,a)=logSW(a,y);
       }else{
-        pred=logSW(a,y);
-	if(conf.stockWeightProcess==2){
-	  pred += logCSW(y-a);
-	}
+        dat.predSW(y,a)=logSW(a,y);
+	      if(conf.stockWeightProcess==2){
+	        dat.predSW(y,a) += logCSW(y-a);
+	      }
       }
-      nll += -dnorm(log(SW(y,a)), pred, exp(par.logSdLogSWObs(0)), true);
+      nll += -dnorm(log(SW(y,a)), dat.predSW(y,a), exp(par.logSdLogSWObs(0)), true);
+      dat.predSW(y,a)=exp(dat.predSW(y,a));
     }
   }
   return nll;

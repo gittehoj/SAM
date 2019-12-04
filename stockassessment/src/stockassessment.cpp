@@ -54,7 +54,7 @@ Type objective_function<Type>::operator() ()
   DATA_VECTOR(weight); dataset.weight=weight; 
   DATA_VECTOR_INDICATOR(keep, logobs); //dataset.keep=keep; 
   DATA_ARRAY(propMat); dataset.propMat=propMat; 
-  DATA_ARRAY(stockMeanWeight); dataset.stockMeanWeight=stockMeanWeight;  
+  DATA_ARRAY(stockMeanWeight); dataset.stockMeanWeight=stockMeanWeight; dataset.predSW=stockMeanWeight;
   DATA_ARRAY(catchMeanWeight); dataset.catchMeanWeight=catchMeanWeight; 
   DATA_ARRAY(natMor); dataset.natMor=natMor; 
   DATA_ARRAY(landFrac); dataset.landFrac=landFrac; 

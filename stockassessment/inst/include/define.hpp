@@ -59,6 +59,7 @@ struct dataSet{
   array<Type> propF;
   array<Type> propM;
   vector<matrix<Type> > corList;
+  array<Type> predSW;
 dataSet() {};
 
 dataSet(SEXP x) {
@@ -87,6 +88,7 @@ dataSet(SEXP x) {
     propF = asArray<Type>(getListElement(x,"propF"));
     propM = asArray<Type>(getListElement(x,"propM"));
     corList = listMatrixFromR<Type>(getListElement(x,"corList"));
+    predSW = asArray<Type>(getListElement(x,"predSW"));
   };
 
   dataSet<Type>& operator=(const dataSet<Type>& rhs) {
@@ -115,6 +117,7 @@ dataSet(SEXP x) {
     propF = rhs.propF;
     propM = rhs.propM;
     corList = rhs.corList;
+    predSW=rhs.predSW;
     return *this;
   };
 };

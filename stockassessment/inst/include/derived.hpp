@@ -7,9 +7,9 @@ Type ssbi(dataSet<Type> &dat, confSet &conf, array<Type> &logN, array<Type> &log
   Type ssb=0;
   for(int j=0; j<stateDimN; ++j){
     if(conf.keyLogFsta(0,j)>(-1)){
-      ssb += exp(logN(j,i))*exp(-exp(logF(conf.keyLogFsta(0,j),i))*dat.propF(i,j)-dat.natMor(i,j)*dat.propM(i,j))*dat.propMat(i,j)*dat.stockMeanWeight(i,j);
+      ssb += exp(logN(j,i))*exp(-exp(logF(conf.keyLogFsta(0,j),i))*dat.propF(i,j)-dat.natMor(i,j)*dat.propM(i,j))*dat.propMat(i,j)*dat.predSW(i,j);
     }else{
-      ssb += exp(logN(j,i))*exp(-dat.natMor(i,j)*dat.propM(i,j))*dat.propMat(i,j)*dat.stockMeanWeight(i,j);
+      ssb += exp(logN(j,i))*exp(-dat.natMor(i,j)*dat.propM(i,j))*dat.propMat(i,j)*dat.predSW(i,j);
     }
   }
   return ssb;
@@ -155,7 +155,7 @@ vector<Type> tsbFun(dataSet<Type> &dat, confSet &conf, array<Type> &logN){
   tsb.setZero();  
   for(int y=0;y<timeSteps;y++){  
     for(int a=conf.minAge;a<=conf.maxAge;a++){  
-      tsb(y)+=exp(logN(a-conf.minAge,y))*dat.stockMeanWeight(y,a-conf.minAge);
+      tsb(y)+=exp(logN(a-conf.minAge,y))*dat.predSW(y,a-conf.minAge);
     }
   }
   return tsb;
